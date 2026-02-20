@@ -8,6 +8,7 @@ Feature: Paypal test
     * def Base64 = Java.type('java.util.Base64')
     Given header Authorization = 'Basic ' + Base64.getEncoder().encodeToString(creds.getBytes('utf-8'))
 
+
   Scenario: Create access token and execute create order api and validate status code 200
     Given path 'v1/oauth2/token'
     Given header Content-Type = 'application/x-www-form-urlencoded'
