@@ -1,7 +1,7 @@
 Feature: End to end test of Webhook create get delete and get
 
   Background: Define url and accessToken
-    Given url 'https://api-m.sandbox.paypal.com'
+    Given url payPalUrl
     * def tokenApiRes = callonce read("classpath:helpers/PaypalTokenGenerator.feature")
     * def access_token = tokenApiRes.accessToken
 
@@ -12,12 +12,24 @@ Feature: End to end test of Webhook create get delete and get
     And header Content-Type = 'application/json'
     * def ts = java.lang.System.currentTimeMillis()
     * def targetUrl = 'https://webhook.site/5d271286-ed2b-48c5-8f84-87c5c5c2a029?run='+ts
-    And request {"url": "#(targetUrl)","event_types": [{"name": "*"}]}
+    * def DataGenerator = Java.type('utils.DataGenerator')
+    * def randomName = DataGenerator.getName()
+    * print 'randomName is - '+randomName
+    And request
+    """{
+    "url": "#(targetUrl)",
+    "event_types": [
+        {
+            "name": '*'
+        }
+    ]
+}"""
     When method Post
     Then status 201
     And match response.id == "#string"
     And match response.id != null
     And match response.event_types == '#array'
+    And match response contains {url:'#string',event_types:'#array'}
     * def createdWebhookId = response.id
 
   #Scenario: Fetch a webhook
@@ -27,6 +39,24 @@ Feature: End to end test of Webhook create get delete and get
     Then status 200
     And assert response.webhooks.length > 0
     And match response.webhooks[*].id contains createdWebhookId
+    And match response.webhooks[0].links ==
+    """[
+                {
+                    "href": "#string",
+                    "rel": "#string",
+                    "method": "#string"
+                },
+                {
+                    "href": "#string",
+                    "rel": "#string",
+                    "method": "#string"
+                },
+                {
+                    "href": "#string",
+                    "rel": "#string",
+                    "method": "#string"
+                }
+            ]"""
 
 
   #Scenario: Delete a webhook
