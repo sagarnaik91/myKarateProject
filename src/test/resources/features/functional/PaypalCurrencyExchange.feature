@@ -2,13 +2,13 @@ Feature: Test the paypal shipment tracking API
 
   Background: Fetch the access token
     Given url payPalUrl
-    * def tokenApires = callonce read('classpath:helpers/PaypalTokenGenerator.feature')
-    * def access_token = tokenApires.accessToken
+    * def tokenApiRes = callonce read('classpath:helpers/PaypalTokenGenerator.feature')
+    * def access_token = tokenApiRes.accessToken
 
   Scenario Outline: Negative test
     Given path 'v2/pricing/quote-exchange-rates'
-    And header Authorization = 'Bearer '+access_token
-    And header Content-Type = 'application/json'
+    * def auth = 'Bearer '+access_token
+    And headers { Authorization : '#(auth)', Content-Type : 'application/json'}
 
     And request
       """

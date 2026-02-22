@@ -9,3 +9,4 @@ To pass variable in the request body - "#(variableName)" if type is string
 * def events = [{name: "PAYMENT"}] And request { event_types: #(events) }
 match always uses ==
 match always uses '#string'
+mvn test -Dtest=SmokeRunner#runAllInParallel (This will run the SmokerRunner java runner class and execute runAllInParallel method)
